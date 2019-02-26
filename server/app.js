@@ -1,3 +1,8 @@
+/* File Name: app.js
+Author: Gabriel Norman
+Student ID: 300897331
+Project Name: Comp308 - W2019 - Midterm - 300897331 */
+
 // moddules for node and express
 let createError = require('http-errors');
 let express = require('express');
@@ -5,16 +10,27 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
+//Modules for connect-flash, passport, passport-local-mongoose
+//passport-local, express-session
+let session = require('express-session');
+let passport = require('passport');
+let passportLocal = require('passport-local');
+let localStrategy = passportLocal.Strategy;
+let flash = require('connect-flash');
+
+
 // import "mongoose" - required for DB Access
 let mongoose = require('mongoose');
 // URI
 let config = require('./config/db');
 
-mongoose.connect(process.env.URI || config.URI, { useNewUrlParser: true });
+mongoose.connect(process.env.URI || config.URI, {
+  useNewUrlParser: true
+});
 
 let mongoDB = mongoose.connection;
 mongoDB.on('error', console.error.bind(console, 'Connection Error:'));
-mongoDB.once('open', ()=> {
+mongoDB.once('open', () => {
   console.log("Connected to MongoDB...");
 });
 
@@ -29,10 +45,27 @@ let app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// setup for express-session
+app.use(session({
+  secret: "SomeSecret",
+  saveUninitialized: false,
+  resave: false
+}));
+
+// initialize flash
+app.use(flash());
+
+// initialize for passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 // uncomment after placing your favicon in /client
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../client')));
 
@@ -43,12 +76,12 @@ app.use('/books', books);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

@@ -1,3 +1,8 @@
+/* File Name: books.js
+Author: Gabriel Norman
+Student ID: 300897331
+Project Name: Comp308 - W2019 - Midterm - 300897331 */
+
 module.exports = {
   //local MongoDB deployment ->
   //"URI": "mongodb://localhost/books308"

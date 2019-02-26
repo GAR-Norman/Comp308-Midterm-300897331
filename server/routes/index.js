@@ -1,3 +1,8 @@
+/* File Name: index.js
+Author: Gabriel Norman
+Student ID: 300897331
+Project Name: Comp308 - W2019 - Midterm - 300897331 */
+
 // modules required for routing
 let express = require('express');
 let router = express.Router();
@@ -11,7 +16,7 @@ router.get('/', (req, res, next) => {
   res.render('content/index', {
     title: 'Home',
     books: ''
-   });
+  });
 });
 
 module.exports = router;
